@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">BBox</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="app_introducation">Become a multifunctional box</string>
+
+    <string name="zhihu_daily">知乎日报</string>
+    <string name="option">选项</string>
+    <string name="settings">设置</string>
+    <string name="about">关于</string>
+    <string name="search">搜索</string>
+
+
+
+</resources>

@@ -1,0 +1,30 @@
+ext {
+    //android default config
+    configuration = [
+            compileSdkVersion: 25,
+            buildToolsVersion: "25.0.0",
+            applicationId    : "com.carlos.bbox",
+            minSdkVersion    : 15,
+            targetSdkVersion : 25,
+            versionCode      : 1,
+            versionName      : "1.0.0"
+    ]
+
+    //library version
+    def dependVersion = [
+            support    : "25.3.1",
+            butterknife: "8.6.0",
+    ]
+
+    appDependencies = [
+
+            //base
+            "appcompatv7": "com.android.support:appcompat-v7:${dependVersion.support}",
+            "design"     : "com.android.support:design:${dependVersion.support}",
+
+            //di
+            "butterknife": "com.jakewharton:butterknife:${dependVersion.butterknife}",
+
+    ]
+
+}
