@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.jakewharton.butterknife'
 
-def config = rootProject.ext.configuration
-def appDependencies=rootProject.ext.appDependencies
+def globalConfiguration = rootProject.extensions.getByName("ext")
+def config = globalConfiguration.configuration
+def appDependencies=globalConfiguration.appDependencies
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
 
 android {
+
     compileSdkVersion config.compileSdkVersion
     buildToolsVersion config.buildToolsVersion
     defaultConfig {
@@ -20,6 +27,23 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    // 使用Java1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    //自定义apk名字
+    android.applicationVariants.all{ variant ->
+        variant.outputs.each{ output ->
+            def outputFile=output.outputFile
+            if(outputFile!=null && outputFile.name.endsWith('.apk')){
+                def fileName = "BBox_${defaultConfig.versionName}_${releaseTime()}.apk"
+                output.outputFile=new File(outputFile.parent,fileName)
+            }
+        }
+    }
 }
 
 dependencies {
@@ -32,7 +56,31 @@ dependencies {
     //base
     compile appDependencies.appcompatv7
     compile appDependencies.design
+    compile appDependencies.recyclerview
+    compile appDependencies.cardview
 
     //di
+    compile appDependencies.butterknife
+    annotationProcessor appDependencies.butterknifeCompiler
+    compile appDependencies.dagger
+    annotationProcessor appDependencies.daggerCompiler
+
+    //network
+    compile appDependencies.retrofit
+    compile appDependencies.retrofitRxjava
+    compile appDependencies.retrofitConverterGson
+    compile appDependencies.glide
+//    annotationProcessor appDependencies.glideCompiler
+
+    //rx
+    compile appDependencies.rxjava
+    compile appDependencies.rxandroid
+
+    //other
+    compile appDependencies.fragmentation
+    compile 'com.github.liuguangqiang.swipeback:library:1.0.2@aar'
+    compile 'me.yokeyword:fragmentation-swipeback:1.0.7'
+
+
 
 }
