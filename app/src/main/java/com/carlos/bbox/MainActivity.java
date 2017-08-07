@@ -9,14 +9,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.carlos.bbox.base.BaseActivity;
+import com.carlos.bbox.base.BaseSupportActivity;
 import com.carlos.bbox.zhihu.view.ZhihuDailyFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.yokeyword.fragmentation.SupportFragment;
 
-public class MainActivity extends BaseActivity
+public class MainActivity extends BaseSupportActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.toolbar)

@@ -2,9 +2,9 @@ ext {
     //android default config
     configuration = [
             compileSdkVersion: 25,
-            buildToolsVersion: "25.0.0",
+            buildToolsVersion: "25.0.3",
             applicationId    : "com.carlos.bbox",
-            minSdkVersion    : 15,
+            minSdkVersion    : 19,
             targetSdkVersion : 25,
             versionCode      : 1,
             versionName      : "1.0.0"
@@ -27,7 +27,10 @@ ext {
             rxandroid    : "2.0.1",
 
             //other
-            fragmentation: "1.0.7"
+            fragmentation: "1.0.7",
+            leakcanary   : "1.5.1",
+            bugly        : "2.6.5", //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
+            bugtags      : "2.3.1"//latest.integration 最新版
 //            fragmentation: "latest.release"
     ]
 
@@ -59,7 +62,12 @@ ext {
             rxandroid               : "io.reactivex.rxjava2:rxandroid:${dependVersion.rxandroid}",
 
             //other
-            fragmentation           : "me.yokeyword:fragmentation:${dependVersion.fragmentation}"
+            fragmentation           : "me.yokeyword:fragmentation:${dependVersion.fragmentation}",
+            fragmentationSwipeback  : "me.yokeyword:fragmentation-swipeback:${dependVersion.fragmentation}",
+            leakcanary              : "com.squareup.leakcanary:leakcanary-android:${dependVersion.leakcanary}",
+            crashreport             : "com.tencent.bugly:crashreport:${dependVersion.bugly}",
+            bugtags                 : "com.bugtags.library:bugtags-lib:${dependVersion.bugtags}"
+
     ]
 
 }

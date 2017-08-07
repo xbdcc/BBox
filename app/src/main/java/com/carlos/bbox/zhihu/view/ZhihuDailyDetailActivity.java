@@ -48,10 +48,9 @@ public class ZhihuDailyDetailActivity extends SwipeBackActivity implements Zhihu
     private ZhihuDailyDetailContract.Presenter mZhihuDailyDetailPresenter;
     boolean isBottomShow = true;
 
-    public static void actionStart(Context context, String data1, String data2) {
+    public static void actionStart(Context context, String data1) {
         Intent intent = new Intent(context, ZhihuDailyDetailActivity.class);
         intent.putExtra(ID, data1);
-        intent.putExtra("2", data2);
         context.startActivity(intent);
     }
 
@@ -60,8 +59,9 @@ public class ZhihuDailyDetailActivity extends SwipeBackActivity implements Zhihu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zhihu_daily_detail);
         ButterKnife.bind(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
+
+//        setDragEdge(SwipeBackLayout.DragEdge.LEFT);
 
         back();
 
@@ -71,7 +71,7 @@ public class ZhihuDailyDetailActivity extends SwipeBackActivity implements Zhihu
 
     }
 
-    private void initView(){
+    private void initView() {
         String id = getIntent().getStringExtra(ID);
         LogUtil.d("000id" + id);
 
@@ -102,13 +102,16 @@ public class ZhihuDailyDetailActivity extends SwipeBackActivity implements Zhihu
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 if (scrollY - oldScrollY > 0 && isBottomShow) {  //下移隐藏
+//                    mToolbar.setVisibility(View.GONE);
 //                    Toast.makeText(ZhihuDailyDetailActivity.this, "下隐藏", Toast.LENGTH_SHORT).show();
 //                    isBottomShow = false;
-//                    mToolbar.animate().translationY(mAlZhihuDaily.getHeight());
+//                    mAlZhihuDaily.animate().translationY(-mAlZhihuDaily.getHeight());//57
+
                 } else if (scrollY - oldScrollY < 0 && !isBottomShow) {    //上移出现
+//                    mToolbar.setVisibility(View.VISIBLE);
 //                    Toast.makeText(ZhihuDailyDetailActivity.this, "上出现", Toast.LENGTH_SHORT).show();
 //                    isBottomShow = true;
-//                    mToolbar.animate().translationY(0);
+//                    mAlZhihuDaily.animate().translationY(0);
                 }
             }
         });
@@ -148,7 +151,7 @@ public class ZhihuDailyDetailActivity extends SwipeBackActivity implements Zhihu
 
     @Override
     public void setPresenter(ZhihuDailyDetailContract.Presenter presenter) {
-        mZhihuDailyDetailPresenter=presenter;
+        mZhihuDailyDetailPresenter = presenter;
     }
 
     @Override

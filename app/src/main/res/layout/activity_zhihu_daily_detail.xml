@@ -15,6 +15,7 @@
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
 
+        <!-- layout_scrollFlags ： scroll|enterAlways，跟随总体移动 -->
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
@@ -33,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                app:layout_collapseMode="parallax"
+                app:layout_collapseMode="pin"
                 app:layout_collapseParallaxMultiplier="0.7"
                 android:fitsSystemWindows="true"
                 android:src="@mipmap/xiaobudian"/>
@@ -43,7 +44,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:layout_scrollFlags="scroll|enterAlways|snap"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
                 app:title="标题"
                 tools:title="ggfg"/>

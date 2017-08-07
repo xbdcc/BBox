@@ -3,7 +3,10 @@ package com.carlos.bbox.base;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
+
+import com.bugtags.library.Bugtags;
 
 import me.yokeyword.fragmentation.SupportActivity;
 
@@ -11,7 +14,7 @@ import me.yokeyword.fragmentation.SupportActivity;
  * Created by caochang on 2017/6/26.
  */
 
-public class BaseActivity extends SupportActivity{
+public class BaseSupportActivity extends SupportActivity{
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,5 +32,23 @@ public class BaseActivity extends SupportActivity{
                 onBackPressedSupport();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Bugtags.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Bugtags.onPause(this);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        Bugtags.onDispatchTouchEvent(this, event);
+        return super.dispatchTouchEvent(event);
     }
 }

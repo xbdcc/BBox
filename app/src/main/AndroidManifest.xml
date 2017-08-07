@@ -3,6 +3,7 @@
           package="com.carlos.bbox">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:name=".MyApplication"
@@ -14,7 +15,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"
+            android:label="${APP_NAME}"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -25,7 +26,8 @@
         <activity
             android:name=".zhihu.view.ZhihuDailyDetailActivity"
             android:label="@string/title_activity_zhihu_daily_detail"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            >
         </activity>
     </application>
 

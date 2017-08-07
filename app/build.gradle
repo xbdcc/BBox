@@ -1,30 +1,51 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.jakewharton.butterknife'
+apply plugin: 'com.bugtags.library.plugin'
 
 def globalConfiguration = rootProject.extensions.getByName("ext")
 def config = globalConfiguration.configuration
-def appDependencies=globalConfiguration.appDependencies
-def releaseTime() {
-    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+def appDependencies = globalConfiguration.appDependencies
+def releaseTime = new Date().format("yyyyMMdd", TimeZone.getTimeZone("UTC"))
+def localData = rootProject.file("local/data.properties")
+def localDataProperties = new Properties()
+if (localData.exists()) {
+    localDataProperties.load(new FileInputStream(localData))
 }
 
 android {
 
     compileSdkVersion config.compileSdkVersion
     buildToolsVersion config.buildToolsVersion
+
+    signingConfigs {
+        release {
+            keyAlias localDataProperties['keyAlias']
+            keyPassword localDataProperties['keyPassword']
+            storeFile file("" + localDataProperties['keyStoreFile'])
+            storePassword localDataProperties['keyStorePassword']
+        }
+    }
+
     defaultConfig {
         applicationId config.applicationId
         minSdkVersion config.minSdkVersion
         targetSdkVersion config.targetSdkVersion
         versionCode config.versionCode
+
         versionName config.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            // 设置支持的 SO 库构架，一般而言，取你所有的库支持的构架的`交集`。
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64', 'mips', 'mips64'
+        }
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+//            minifyEnabled true//混淆开启
+            shrinkResources true//清理无用资源
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'//指定混淆规则文件
         }
     }
 
@@ -34,16 +55,41 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    //多渠道打包
+    productFlavors {
+        dev {          //开发测试版本
+//            applicationId "com.carlos.bbox.dev"
+            manifestPlaceholders = [
+                    APP_NAME: "@string/app_name_dev"]
+        }
+        production {   //正式发布版本
+//            applicationId "com.carlos.bbox"
+            manifestPlaceholders = [
+                    APP_NAME: "@string/app_name"]
+        }
+    }
+
     //自定义apk名字
-    android.applicationVariants.all{ variant ->
-        variant.outputs.each{ output ->
-            def outputFile=output.outputFile
-            if(outputFile!=null && outputFile.name.endsWith('.apk')){
-                def fileName = "BBox_${defaultConfig.versionName}_${releaseTime()}.apk"
-                output.outputFile=new File(outputFile.parent,fileName)
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                def fileName = variant.productFlavors[0].name
+                fileName = "BBox_${fileName}_${defaultConfig.versionName}_${releaseTime}.apk"
+                output.outputFile = new File(outputFile.parent, fileName)
             }
         }
     }
+
+}
+
+bugtags {
+    if (localData.exists()) {
+        //自动上传符号表功能配置，如果需要根据 build varint 配置，请参考帮助中心->符号表->Android 符号表->配置自动上传符号表
+        appKey localDataProperties["bugtagsAppKey"]  //这里是你的 appKey
+        appSecret localDataProperties["bugtagsAppSecret"]    //这里是你的 appSecret，管理员在设置页可以查看
+    }
+    mappingUploadEnabled true
 }
 
 dependencies {
@@ -70,7 +116,6 @@ dependencies {
     compile appDependencies.retrofitRxjava
     compile appDependencies.retrofitConverterGson
     compile appDependencies.glide
-//    annotationProcessor appDependencies.glideCompiler
 
     //rx
     compile appDependencies.rxjava
@@ -78,9 +123,10 @@ dependencies {
 
     //other
     compile appDependencies.fragmentation
-    compile 'com.github.liuguangqiang.swipeback:library:1.0.2@aar'
-    compile 'me.yokeyword:fragmentation-swipeback:1.0.7'
+    compile appDependencies.fragmentationSwipeback
+    devCompile appDependencies.leakcanary
+    devCompile appDependencies.crashreport
 
-
+    compile appDependencies.bugtags
 
 }

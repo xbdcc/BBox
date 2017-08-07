@@ -67,7 +67,7 @@ public class ZhihuDailyFragment extends BaseFragment implements ZhihuDailyContra
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         mRvZhihudaily.setLayoutManager(linearLayoutManager);
         mRvZhihudaily.setAdapter(mZhihuDailyAdapter);
-        mZhihuDailyAdapter.setOnItemClickListener((position, view) -> ZhihuDailyDetailActivity.actionStart(getContext(), mZhihuDailyItemVOs.get(position).getId(), ""));
+        mZhihuDailyAdapter.setOnItemClickListener((position, view) -> ZhihuDailyDetailActivity.actionStart(getContext(), mZhihuDailyItemVOs.get(position).getId()));
         mRvZhihudaily.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
