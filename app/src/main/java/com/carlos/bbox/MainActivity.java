@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.carlos.bbox.base.BaseSupportActivity;
+import com.carlos.bbox.redenvelope.RedEnvelopeFragment;
 import com.carlos.bbox.zhihu.view.ZhihuDailyFragment;
 
 import butterknife.BindView;
@@ -27,12 +28,14 @@ public class MainActivity extends BaseSupportActivity
     DrawerLayout mDrawerLayout;
 
     private ZhihuDailyFragment mZhihuFragment;
+    private RedEnvelopeFragment mRedEnvelopeFragment;
     private AboutFragment mAboutFragment;
 
     private static final int INDEX_ZHIHU = 101;
+    private static final int INDEX_REDENVELOPE_ASSISTANT = 102;
     private static final int INDEX_ABOUT = 109;
-    private int hideFragment = INDEX_ZHIHU;
-    private int showFragment = INDEX_ZHIHU;
+    private int hideFragment = INDEX_REDENVELOPE_ASSISTANT;
+    private int showFragment = INDEX_REDENVELOPE_ASSISTANT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +57,9 @@ public class MainActivity extends BaseSupportActivity
         mNavView.setNavigationItemSelectedListener(this);
 
         mZhihuFragment=new ZhihuDailyFragment();
+        mRedEnvelopeFragment=new RedEnvelopeFragment();
         mAboutFragment=new AboutFragment();
-        loadMultipleRootFragment(R.id.fl_zhihu,0,mZhihuFragment,mAboutFragment);
+        loadMultipleRootFragment(R.id.fl_zhihu,1,mZhihuFragment,mRedEnvelopeFragment,mAboutFragment);
 
         showHideFragment(getTargetFragment(showFragment), getTargetFragment(hideFragment));
         mToolbar.setTitle(mNavView.getMenu().findItem(getCurrentItem(showFragment)).getTitle().toString());
@@ -100,6 +104,10 @@ public class MainActivity extends BaseSupportActivity
             showFragment = INDEX_ZHIHU;
 //            mSearchMenuItem.setVisible(false);
         }
+        if (id == R.id.nav_redenvelope_assistant) {
+            showFragment = INDEX_REDENVELOPE_ASSISTANT;
+//            mSearchMenuItem.setVisible(false);
+        }
         if (id == R.id.nav_about) {
             showFragment = INDEX_ABOUT;
         }
@@ -117,6 +125,8 @@ public class MainActivity extends BaseSupportActivity
         switch (item) {
             case INDEX_ZHIHU:
                 return mZhihuFragment;
+            case INDEX_REDENVELOPE_ASSISTANT:
+                return mRedEnvelopeFragment;
             case INDEX_ABOUT:
                 return mAboutFragment;
         }
@@ -127,6 +137,8 @@ public class MainActivity extends BaseSupportActivity
         switch (item) {
             case INDEX_ZHIHU:
                 return R.id.nav_zhihu;
+            case INDEX_REDENVELOPE_ASSISTANT:
+                return R.id.nav_redenvelope_assistant;
             case INDEX_ABOUT:
                 return R.id.nav_about;
         }

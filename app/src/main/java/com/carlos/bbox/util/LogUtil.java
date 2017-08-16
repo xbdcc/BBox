@@ -27,7 +27,7 @@ public class LogUtil {
     }
 
     public static void e(String msg){
-        Log.i(TAG,getLogTitle()+msg);
+        Log.e(TAG,getLogTitle()+msg);
     }
 
     public static void e(String msg,Throwable throwable){

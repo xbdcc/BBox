@@ -7,8 +7,26 @@
 
     <color name="white">#ffffff</color>
     <color name="gray_light">#f9f9f9</color>
+    <color name="gray_bright">#808080</color>
     <color name="blue_text">#0099cc</color>
     <color name="button_blue">#56b3f5</color>
     <color name="blue_link">#0000ff</color>
+
+    <color name="icon_light">#333333</color>
+
+
+
+    <!--<color name="white">#ffffff</color>-->
+    <!--<color name="black">#000000</color>-->
+    <!--<color name="gray_light">#f9f9f9</color>-->
+    <!--<color name="gray_bright">#808080</color>-->
+    <!--<color name="blue_light">#18b4ed</color>-->
+    <!--<color name="blue_light2">#00a1e1</color>-->
+    <!--<color name="blue_text">#0099cc</color>-->
+    <!--<color name="button_blue">#56b3f5</color>-->
+
+
+
+    <color name="menu_line">#808080</color>
 
 </resources>

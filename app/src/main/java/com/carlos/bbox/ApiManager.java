@@ -15,7 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiManager {
 
-    public static final int CONNECT_TIME_OUT = 8;//超时时间
+    public static final int CONNECT_TIME_OUT = 7;//超时时间
 
     private static ApiManager apiManager;
 

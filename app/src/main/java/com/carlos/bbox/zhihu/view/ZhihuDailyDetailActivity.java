@@ -14,6 +14,7 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 
 import com.carlos.bbox.R;
+import com.carlos.bbox.util.ActivityCollector;
 import com.carlos.bbox.util.HtmlUtil;
 import com.carlos.bbox.util.ImageUtil;
 import com.carlos.bbox.util.LogUtil;
@@ -58,6 +59,7 @@ public class ZhihuDailyDetailActivity extends SwipeBackActivity implements Zhihu
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zhihu_daily_detail);
+        ActivityCollector.addActivity(this);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
 
@@ -130,6 +132,7 @@ public class ZhihuDailyDetailActivity extends SwipeBackActivity implements Zhihu
             mWvZhihuDaily.destroy();
             mWvZhihuDaily = null;
         }
+        ActivityCollector.removeActivity(this);
     }
 
     public void back() {

@@ -43,4 +43,12 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
+
+    <!-- 分割线-->
+    <style name="view_line">
+        <item name="android:layout_height">@dimen/line_height</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@color/gray_bright</item>
+    </style>
+
 </resources>

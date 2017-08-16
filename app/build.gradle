@@ -44,7 +44,7 @@ android {
         release {
             signingConfig signingConfigs.release
 //            minifyEnabled true//混淆开启
-            shrinkResources true//清理无用资源
+//            shrinkResources true//清理无用资源
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'//指定混淆规则文件
         }
     }
@@ -124,9 +124,9 @@ dependencies {
     //other
     compile appDependencies.fragmentation
     compile appDependencies.fragmentationSwipeback
-    devCompile appDependencies.leakcanary
-    devCompile appDependencies.crashreport
-
+    compile appDependencies.crashreport
     compile appDependencies.bugtags
+    devCompile appDependencies.leakcanary
+
 
 }

@@ -101,6 +101,7 @@ public class ZhihuDailyFragment extends BaseFragment implements ZhihuDailyContra
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mZhihuDailyPresenter.unsubscribe();
         unbinder.unbind();
     }
 
@@ -150,5 +151,10 @@ public class ZhihuDailyFragment extends BaseFragment implements ZhihuDailyContra
         mZhihuDailyAdapter.addItems(zhihuDailyBeforeVO.getStories());
         currentLoadDate = zhihuDailyBeforeVO.getDate();
 
+    }
+
+    @Override
+    public boolean isActive() {
+        return isAdded();
     }
 }

@@ -1,5 +1,6 @@
 package com.carlos.bbox.base;
 
+import android.app.ActivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -7,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.bugtags.library.Bugtags;
+import com.carlos.bbox.util.ActivityCollector;
 
 import me.yokeyword.fragmentation.SupportActivity;
 
@@ -19,6 +21,7 @@ public class BaseSupportActivity extends SupportActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityCollector.addActivity(this);
     }
 
     protected void setToolBar(Toolbar toolbar, String title) {

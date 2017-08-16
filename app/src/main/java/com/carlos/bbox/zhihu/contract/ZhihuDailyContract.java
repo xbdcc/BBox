@@ -17,6 +17,8 @@ public interface ZhihuDailyContract {
 
         void setBeforeData(ZhihuDailyBeforeVO zhihuDailyBeforeVO);
 
+        boolean isActive();
+
     }
 
     interface Presenter extends BasePresenter {

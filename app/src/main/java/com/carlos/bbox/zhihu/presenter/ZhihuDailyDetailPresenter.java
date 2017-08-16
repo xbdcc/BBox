@@ -2,11 +2,13 @@ package com.carlos.bbox.zhihu.presenter;
 
 import com.carlos.bbox.ApiManager;
 import com.carlos.bbox.util.CommonSubscriber;
+import com.carlos.bbox.util.RxDisposables;
 import com.carlos.bbox.zhihu.bean.ZhihuDailyDetailVO;
 import com.carlos.bbox.zhihu.contract.ZhihuDailyDetailContract;
 
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -30,13 +32,13 @@ public class ZhihuDailyDetailPresenter implements ZhihuDailyDetailContract.Prese
 
     @Override
     public void unsubscribe() {
-
+        RxDisposables.clear();
     }
 
     @Override
     public void getData(String id) {
         Flowable<ZhihuDailyDetailVO> flowable = ApiManager.getInstence().getZhihuApiService().getDetailDaily(id);
-        flowable.subscribeOn(Schedulers.io())
+        Disposable disposable=flowable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new CommonSubscriber<ZhihuDailyDetailVO>() {
                     @Override
@@ -44,5 +46,6 @@ public class ZhihuDailyDetailPresenter implements ZhihuDailyDetailContract.Prese
                         mZhihuDialyDetailView.showContent(zhihuDailyDetailVO);
                     }
                 });
+        RxDisposables.add(disposable);
     }
 }

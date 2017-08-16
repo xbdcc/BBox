@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.carlos.bbox">
 
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
@@ -26,9 +27,20 @@
         <activity
             android:name=".zhihu.view.ZhihuDailyDetailActivity"
             android:label="@string/title_activity_zhihu_daily_detail"
-            android:theme="@style/AppTheme.NoActionBar"
-            >
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
+
+        <service android:name=".redenvelope.QiangHongBaoService"
+                 android:process=":remote"
+                 android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessible_service_config"/>
+        </service>
+
     </application>
 
 </manifest>

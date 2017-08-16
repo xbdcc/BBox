@@ -3,6 +3,7 @@ package com.carlos.bbox.zhihu.presenter;
 import com.carlos.bbox.ApiManager;
 import com.carlos.bbox.util.CommonSubscriber;
 import com.carlos.bbox.util.LogUtil;
+import com.carlos.bbox.util.RxDisposables;
 import com.carlos.bbox.zhihu.bean.ZhihuDailyBeforeVO;
 import com.carlos.bbox.zhihu.bean.ZhihuDailyItemVO;
 import com.carlos.bbox.zhihu.bean.ZhihuDailyTodayVO;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -34,12 +36,14 @@ public class ZhihuDailyPresenter implements ZhihuDailyContract.Presenter{
 
     @Override
     public void unsubscribe() {
+        RxDisposables.clear();
     }
+
 
     @Override
     public void getTodayData() {
         Flowable<ZhihuDailyTodayVO> flowable = ApiManager.getInstence().getZhihuApiService().getTodayDaily();
-        flowable.subscribeOn(Schedulers.io())
+        Disposable disposable=flowable.subscribeOn(Schedulers.io())
                 .map(zhihuDailyVO -> {
                     String date = zhihuDailyVO.getDate();
                     List<ZhihuDailyItemVO> zhihuDailyItemVOs=zhihuDailyVO.getStories();
@@ -53,25 +57,32 @@ public class ZhihuDailyPresenter implements ZhihuDailyContract.Presenter{
 
                     @Override
                     public void onNext(ZhihuDailyTodayVO zhihuDailyTodayVO) {
-                        mZhihuDailyView.setTodayData(zhihuDailyTodayVO);
-                        mZhihuDailyView.stateSuccess();
-//                        m
+                        if (mZhihuDailyView.isActive()){
+                            mZhihuDailyView.setTodayData(zhihuDailyTodayVO);
+                            mZhihuDailyView.stateSuccess();
+                        }
+//
 //                        mZhihuDailyAdapter.addItems(zhihuZhihuDailyItems);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        mZhihuDailyView.stateFailure();
+                        if (mZhihuDailyView.isActive()){
+                            mZhihuDailyView.stateFailure();
+                        }
                         LogUtil.e("error", e);
                     }
                 });
+        LogUtil.d("0000000---");
+        RxDisposables.add(disposable);
+//        ActivityCollector.finishAll();
     }
 
     @Override
     public void getBefore(String date) {
         Flowable<ZhihuDailyBeforeVO> flowable = ApiManager.getInstence().getZhihuApiService().getBeforeDaily(date);
-        flowable.subscribeOn(Schedulers.io())
+        Disposable disposable=flowable.subscribeOn(Schedulers.io())
                 .map(zhihuDailyVO -> {
 //                    String date = zhihuDailyVO.getDate();
                     List<ZhihuDailyItemVO> zhihuDailyItemVOs=zhihuDailyVO.getStories();
@@ -84,17 +95,23 @@ public class ZhihuDailyPresenter implements ZhihuDailyContract.Presenter{
 
                     @Override
                     public void onNext(ZhihuDailyBeforeVO zhihuDailyBeforeVOs) {
+                        if (mZhihuDailyView.isActive()){
                         mZhihuDailyView.setBeforeData(zhihuDailyBeforeVOs);
                         mZhihuDailyView.stateSuccess();
+
+                        }
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
                         LogUtil.e("error", e);
-                        mZhihuDailyView.stateFailure();
+                        if (mZhihuDailyView.isActive()){
+                            mZhihuDailyView.stateFailure();
+                        }
                     }
                 });
+        RxDisposables.add(disposable);
     }
 
 }
