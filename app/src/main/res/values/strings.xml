@@ -20,6 +20,7 @@
     <string name="settings">设置</string>
     <string name="about">关于</string>
     <string name="search">搜索</string>
+    <string name="open_assistant">开启红包助手</string>
     <string name="title_activity_zhihu_daily_detail">ZhihuDailyDetailActivity</string>
 
     <string name="title_activity_red_envelope">RedEnvelopeActivity</string>
@@ -29,6 +30,7 @@
 
 
     <!-- red envelope assistant strings.-->
+    <string name="bbox_red_envelope_assistant">BBox抢红包</string>
     <string name="title_qq">QQ</string>
     <string name="title_wechat">微信</string>
 

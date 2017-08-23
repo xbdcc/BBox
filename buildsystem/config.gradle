@@ -30,7 +30,8 @@ ext {
             fragmentation: "1.0.7",
             leakcanary   : "1.5.1",
             bugly        : "2.6.5", //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
-            bugtags      : "2.3.1"//latest.integration 最新版
+            bugtags      : "2.3.1",//latest.integration 最新版
+            eventbus     :"3.0.0"
 //            fragmentation: "latest.release"
     ]
 
@@ -66,7 +67,8 @@ ext {
             fragmentationSwipeback  : "me.yokeyword:fragmentation-swipeback:${dependVersion.fragmentation}",
             leakcanary              : "com.squareup.leakcanary:leakcanary-android:${dependVersion.leakcanary}",
             crashreport             : "com.tencent.bugly:crashreport:${dependVersion.bugly}",
-            bugtags                 : "com.bugtags.library:bugtags-lib:${dependVersion.bugtags}"
+            bugtags                 : "com.bugtags.library:bugtags-lib:${dependVersion.bugtags}",
+            eventbus                : "org.greenrobot:eventbus:${dependVersion.eventbus}"
 
     ]
 

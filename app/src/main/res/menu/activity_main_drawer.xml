@@ -3,17 +3,16 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_redenvelope_assistant"
-            android:checkable="true"
-            android:checked="true"
-            android:icon="@mipmap/ic_red_envelope"
-            android:title="@string/redenvelope_assistant"/>
-        <item
             android:id="@+id/nav_zhihu"
             android:checkable="true"
             android:checked="true"
             android:icon="@mipmap/ic_zhihu"
             android:title="@string/zhihu_daily"/>
+        <item
+            android:id="@+id/nav_redenvelope_assistant"
+            android:checkable="true"
+            android:icon="@mipmap/ic_red_envelope"
+            android:title="@string/redenvelope_assistant"/>
     </group>
 
     <item android:title="@string/option">

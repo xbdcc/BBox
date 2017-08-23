@@ -126,6 +126,7 @@ dependencies {
     compile appDependencies.fragmentationSwipeback
     compile appDependencies.crashreport
     compile appDependencies.bugtags
+    compile appDependencies.eventbus
     devCompile appDependencies.leakcanary
 
 

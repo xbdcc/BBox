@@ -12,11 +12,13 @@ import android.os.PowerManager;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.Toast;
 
 import com.carlos.bbox.MainActivity;
 import com.carlos.bbox.MyApplication;
 import com.carlos.bbox.R;
 import com.carlos.bbox.util.LogUtil;
+import com.carlos.bbox.util.PreferencesUtils;
 
 /**
  * Created by 小不点 on 2016/2/5.
@@ -84,9 +86,39 @@ public class QiangHongBaoService extends AccessibilityService {
     }
 
     @Override
+    protected void onServiceConnected() {
+        super.onServiceConnected();
+        Toast.makeText(this, "frgf" +
+                "", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
 
         Log.d(TAG_SHUA,"------->"+event.toString());
+        Toast.makeText(this, "33", Toast.LENGTH_SHORT).show();
+
+        if(!isStopUse){
+            nodeRoot=getRootInActiveWindow();
+            Toast.makeText(this, "353", Toast.LENGTH_SHORT).show();
+
+            try{
+//            QQHongBaoService qqHongBaoService=new QQHongBaoService(getApplicationContext(),event,nodeRoot);
+               if(PreferencesUtils.getQQUseStatus()){
+//                    LogUtil.d("qq open");
+//                   Toast.makeText(this, "qq open", Toast.LENGTH_SHORT).show();
+
+                   QQHongBaoService qqHongBaoService=new QQHongBaoService(this,getApplicationContext(),event,nodeRoot);
+                }
+                if(PreferencesUtils.getXiuYiXiuUseStatus()){
+                }else{
+                    Log.d(TAG,"支付宝自动咻一咻功能未开启");
+                }
+
+            }catch (Exception e){
+                Log.e(TAG,"异常错误");
+            }
+        }
 
 //        ControlUse controlUse=new ControlUse(getApplicationContext());
 //        if(controlUse.stopUse()){
