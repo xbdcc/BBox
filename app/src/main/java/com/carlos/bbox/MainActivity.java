@@ -86,17 +86,6 @@ public class MainActivity extends BaseSupportActivity
         hideFragment = showFragment;
     }
 
-    //    @Override
-//    public void onBackPressed() {
-
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        if (drawer.isDrawerOpen(GravityCompat.START)) {
-//            drawer.closeDrawer(GravityCompat.START);
-//        } else {
-//            super.onBackPressed();
-//        }
-//    }
-
     @Override
     public void onBackPressedSupport() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -140,10 +129,12 @@ public class MainActivity extends BaseSupportActivity
         switch (item.getItemId()){
             case R.id.nav_zhihu:
                 showFragment = INDEX_ZHIHU;
+                mSearchMenu.setVisible(false);
+                mEnterMenu.setVisible(false);
                 break;
             case R.id.nav_redenvelope_assistant:
                 showFragment = INDEX_REDENVELOPE_ASSISTANT;
-                mSearchMenu.setVisible(false);
+                mEnterMenu.setVisible(true);
                 break;
             case R.id.nav_about:
                 showFragment = INDEX_ABOUT;
@@ -191,6 +182,11 @@ public class MainActivity extends BaseSupportActivity
      * 更新当前 QiangHongBaoService 显示状态
      */
     private void updateServiceStatus(){
+        if (showFragment!=INDEX_REDENVELOPE_ASSISTANT)
+            return;
+        else LogUtil.d("gdggdg");
+        Toast.makeText(this, "gfgfg", Toast.LENGTH_SHORT).show();
+
         if(isServiceEnabled()){
             LogUtil.d("red envelope assistant service is opened.");
             mEnterMenu.setVisible(false);

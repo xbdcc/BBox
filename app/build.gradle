@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.jakewharton.butterknife'
 apply plugin: 'com.bugtags.library.plugin'
+apply plugin: 'org.greenrobot.greendao'
 
 def globalConfiguration = rootProject.extensions.getByName("ext")
 def config = globalConfiguration.configuration
@@ -128,6 +129,7 @@ dependencies {
     compile appDependencies.bugtags
     compile appDependencies.eventbus
     devCompile appDependencies.leakcanary
+    compile 'org.greenrobot:greendao:3.2.2' // add library
 
 
 }
