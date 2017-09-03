@@ -7,11 +7,18 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 
+import com.carlos.bbox.MyApplication;
+import com.carlos.bbox.db.QQRedEnvelopeDb;
+import com.carlos.bbox.redenvelope.entity.MessageEvent;
+import com.carlos.bbox.redenvelope.entity.QQRedEnvelope;
 import com.carlos.bbox.util.LogUtil;
 import com.carlos.bbox.util.PreferencesUtils;
-import com.carlos.bbox.util.ToastUtil;
 import com.carlos.bbox.util.WakeupTools;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,7 +38,7 @@ public class QQHongBaoService {
 
     private static final String CLASS_QQ_LIST="com.tencent.mobileqq.activity.SplashActivity";//QQ聊天列表页
 //    private static final String CLASS_RED_ENVELOPE="cooperation.qwallet.plugin.QWalletPayProgressDialog";//QQ红包框和红包详情页
-    private static final String CLASS_RED_ENVELOPE="cooperation.qwallet.plugin.QWalletPluginProxyActivity";//QQ红包框和红包详情页
+    private static final String CLASS_RED_ENVELOPE="cooperation.qwallet.plugin.QWalletPluginProxyActivity";//QQ红包框和红包详情页，后门测试发现还有发送红包页面也是，要避免发送红包页面元素一样。
 
     private final static String QQ_NOTIFICATION_TIP = "[QQ红包]";
     private final static String QQ_DEFAULT_CLICK_OPEN = "点击拆开";
@@ -54,15 +61,16 @@ public class QQHongBaoService {
     private static boolean isFinished;//true查看抢红包的结果
     private static boolean isSingerClick=false;//一次红包口令不重复点击
 
-    private int delayedOpenPutong=0;//延迟点击普通红包时间
-    private int delayedOpenKouling=1;//延迟点击口令红包时间
-    private int delayedClick=2;//延迟输入口令时间
-    private int delayedSubmit=3;//延迟点击发送时间
-    private int delayedClose=4;//延迟关闭红包页面时间
+    private final static int delayedOpenPutong=0;//延迟点击普通红包时间
+    private final static int delayedOpenKouling=1;//延迟点击口令红包时间
+    private final static int delayedClick=2;//延迟输入口令时间
+    private final static int delayedSubmit=3;//延迟点击发送时间
+    private final static int delayedClose=4;//延迟关闭红包页面时间
 
 
     public QQHongBaoService(Context context,AccessibilityEvent event, AccessibilityNodeInfo nodeRoot){
         this.context= context;
+        this.context= MyApplication.getInstance();
         this.event=event;
         this.nodeRoot=nodeRoot;
 
@@ -99,8 +107,6 @@ public class QQHongBaoService {
 
                 clickPasswordEnvelope();
 
-                grabHongBao();
-
                 inputEnvelopePassword();
 
                 sendEnvelopePassword();
@@ -114,11 +120,11 @@ public class QQHongBaoService {
 
     private void clickChatPage() {
         List<AccessibilityNodeInfo> node_hongbao=nodeInfo.findAccessibilityNodeInfosByText(QQ_NOTIFICATION_TIP);
-        LogUtil.d( "聊天页面出现的红包" + node_hongbao.size());
+//        LogUtil.d( "聊天页面出现的红包" + node_hongbao.size());
 //        delayedTime(500);
         //聊天页面出现红包
         node_hongbao=nodeInfo.findAccessibilityNodeInfosByText(QQ_NOTIFICATION_TIP);
-        LogUtil.d( "聊天页面出现的红包" + node_hongbao.size());
+//        LogUtil.d( "聊天页面出现的红包" + node_hongbao.size());
         size=node_hongbao.size();
         if(size>0){
             AccessibilityNodeInfo parent=node_hongbao.get(size-1);
@@ -132,7 +138,7 @@ public class QQHongBaoService {
     private void sendEnvelopePassword() {
         //发送红包口令
         List<AccessibilityNodeInfo> node_send=nodeInfo.findAccessibilityNodeInfosByText(QQ_HONG_BAO_SEND);
-        LogUtil.d( "点击发送输入的口令个数" + node_send.size());
+//        LogUtil.d( "点击发送输入的口令个数" + node_send.size());
         size=node_send.size();
         if(size>0){
             AccessibilityNodeInfo parent=node_send.get(size-1);
@@ -153,7 +159,7 @@ public class QQHongBaoService {
         //输入红包口令
         List<AccessibilityNodeInfo> node_input=nodeInfo.findAccessibilityNodeInfosByText(QQ_CLICK_TO_PASTE_PASSWORD);
         if(node_input!=null){
-            LogUtil.d( "点击输入口令个数" + node_input.size());
+//            LogUtil.d( "点击输入口令个数" + node_input.size());
             size=node_input.size();
             if(size>0){
                 AccessibilityNodeInfo parent=node_input.get(size-1).getParent();
@@ -162,7 +168,7 @@ public class QQHongBaoService {
                     isHasInput=true;
                     delayedControl(2);
                     parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-//                            LogUtil.d( "点击输入红包口令");
+                    LogUtil.d( "点击输入红包口令");
                 }
             }
         }
@@ -171,6 +177,9 @@ public class QQHongBaoService {
     private void openNotification(AccessibilityEvent event, List<CharSequence> texts) {
         if (texts.isEmpty())
             return;
+
+
+
         String text=texts.toString();
         if(text.contains(QQ_NOTIFICATION_TIP)){
             LogUtil.d( "准备打开通知栏");
@@ -188,27 +197,10 @@ public class QQHongBaoService {
         }
     }
 
-    private void grabHongBao(){
-//        WakeupTools.wakeUpAndUnlock(context);//解锁
-
-        //没有发送按钮，不是领红包页面
-        list=nodeInfo.findAccessibilityNodeInfosByText("发送");
-        if(list.size()<1){
-            LogUtil.d("不是领红包页面");
-            return;
-        }
-
-        openCommonEnvelope();
-
-        clickPasswordEnvelope();
-
-
-    }
-
     private void clickPasswordEnvelope() {
         //口令红包
         list=nodeInfo.findAccessibilityNodeInfosByText(QQ_HONG_BAO_PASSWORD);
-        LogUtil.i("口令红包的个数为："+list.size());
+//        LogUtil.i("口令红包的个数为："+list.size());
         size=list.size();
         //领取最新的红包
         if(size>0){
@@ -219,10 +211,9 @@ public class QQHongBaoService {
                 if(!isSingerClick){
                     isSingerClick=true;
                     isHasClicked=true;
-                    LogUtil.d( "点击领红包");
-                    Toast.makeText(context,"点击领红包",Toast.LENGTH_SHORT).show();
-//                    WakeupTools.wakeUpAndUnlock(context);//解锁
-                    delayedControl(1);
+//                    LogUtil.d( "点击领红包");
+                    WakeupTools.wakeUpAndUnlock(context);//解锁
+//                    delayedControl(1);
                     node_child.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
 
                 }
@@ -236,12 +227,12 @@ public class QQHongBaoService {
     private void openCommonEnvelope() {
         //普通红包
         list=nodeInfo.findAccessibilityNodeInfosByText(QQ_DEFAULT_CLICK_OPEN);
-        LogUtil.i("普通红包的个数为："+list.size());
+//        LogUtil.i("普通红包的个数为："+list.size());
         size=list.size();
         //领取最新的红包
         if(size>0){
             AccessibilityNodeInfo parent=list.get(size-1).getParent();
-//            LogUtil.i( "----------------->普通红包：" + parent);
+            LogUtil.i( "----------------->普通红包：" + parent);
             if(parent!=null){
                 isFinished=true;
                 WakeupTools.wakeUpAndUnlock(context);//解锁
@@ -255,26 +246,21 @@ public class QQHongBaoService {
     }
 
     private void closeResult(){
-        isFinished=true;//测试用，单独关闭红包页面。
-        LogUtil.d("isFinished" + ""+isFinished);
+//        isFinished=true;//测试用，单独关闭红包页面。
+//        LogUtil.d("isFinished" + ""+isFinished);
         delayedTime(1000);
         if(isFinished){
-            list=nodeInfo.findAccessibilityNodeInfosByText("查看领取详情");
-            LogUtil.d("需要关闭的页面数量："+list.size());
+
             isSingerClick=false;
 
             saveHongbao();
 
             list=nodeInfo.findAccessibilityNodeInfosByText("关闭");
-            for (AccessibilityNodeInfo accessibilityNodeInfo : list) {
-                LogUtil.d("guanbi"+accessibilityNodeInfo.getContentDescription()+accessibilityNodeInfo.getText());
-            }
 
             if (PreferencesUtils.getQQLingquDelay() != 11) {
                 delayedControl(4);
             }
             if (list.size()>0){
-                ToastUtil.showToast(context,"关闭");
                 list.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 LogUtil.d("关闭弹出的红包框");
                 isFinished = false;
@@ -285,80 +271,31 @@ public class QQHongBaoService {
 
 
     public void delayedControl(int state){
-        delayedControlOne(state);
-//        delayedControlTwo(state);
-    }
-
-
-    public void delayedControlTwo(int state){
         switch (state){
-            case 0:
+            case delayedOpenPutong:
                 time=PreferencesUtils.getQQPutongDelay()*1000;
-                LogUtil.d("------>putong"+time);
                 break;
-            case 1:
+            case delayedOpenKouling:
                 time=1*1000;
                 break;
-            case 2:
-                //                delayedTime(1*1000);
-                time=1*1000;
-                LogUtil.d("------>点击口令"+time);
+            case delayedClick:
+
                 break;
-            case 3:
-//                delayedTime(PreferencesUtils.getQQKoulingDelay()-2);
-                time=(PreferencesUtils.getQQKoulingDelay()-2)*1000;
-                LogUtil.d( "------>发送口令" + time);
+            case delayedSubmit:
+                time=PreferencesUtils.getQQKoulingDelay()*1000;
+//                LogUtil.d( "------>发送口令" + time);
                 break;
-            case 4:
+            case delayedClose:
                 time=PreferencesUtils.getQQLingquDelay()*1000;
-                LogUtil.d( "------>关闭窗口" + time);
+//                LogUtil.d( "------>关闭窗口" + time);
                 break;
         }
         delayedTime(time);
-        LogUtil.d("延迟时间：-------->"+time);
     }
 
-    /**
-     * 自己的时间
-     * @param state
-     */
-    public void delayedControlOne(int state){
-        switch (state){
-            case 0:
-                time=PreferencesUtils.getQQPutongDelay()*1000;
-//                LogUtil.d("------>putong"+time);
-                //设置0.1秒内随机抢
-//                Random random=new Random();
-//                time=random.nextInt(100);
-//                delayedTime(time);
-                break;
-            case 1:
-                //设置0.1秒内随机抢
-//                Random random=new Random();
-//                time=random.nextInt(100);
-//                delayedTime(time);
-                break;
-            case 2:
-//                //设置0.1秒内随机抢
-//                random=new Random();
-//                time=random.nextInt(100);
-//                delayedTime(time);
-                break;
-            case 3:
-               // 设置0.5-1秒内随机抢
-//                random=new Random();
-//                time=random.nextInt(500);
-//                time=500+time;
-//                delayedTime(time);
-                break;
-            case 4:
-//                delayedTime(1000);
-                break;
-        }
-    }
 
     public void delayedTime(int time){
-        LogUtil.d("延迟时间：-------->"+time);
+//        LogUtil.d("延迟时间：-------->"+time);
         try {
             Thread.sleep(time);
         } catch (InterruptedException e) {
@@ -368,54 +305,54 @@ public class QQHongBaoService {
 
 
     private void saveHongbao(){
-        LogUtil.d("gfgfgfgf");
 
-        list=nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mobileqq:id/hb_error_tv");//红包被领完
-        Toast.makeText(context, "保存红包记录", Toast.LENGTH_SHORT).show();
+//        list=nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mobileqq:id/hb_error_tv");//红包被领完
+        list=nodeInfo.findAccessibilityNodeInfosByText("元");//红包被领完
+        if (list.size()<1)
+            return;
+
         //如果没有被领完才保存记录
-        if(list.size()<1){
-            LogUtil.d("kkkkkkkkkkkk");
-            list=nodeInfo.findAccessibilityNodeInfosByText("口令红包");
-            for (AccessibilityNodeInfo accessibilityNodeInfo : list) {
-                ToastUtil.showToast(context,"领取的是口令红包");
+        Toast.makeText(context, "保存红包记录", Toast.LENGTH_SHORT).show();
+        QQRedEnvelope qqRedEnvelope=new QQRedEnvelope();
+
+        SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date date=new Date(System.currentTimeMillis());
+        String time=dateFormat.format(date);
+        qqRedEnvelope.setTime(time);
+
+        list=nodeInfo.findAccessibilityNodeInfosByText("口令红包");
+        if (list.size()>0)
+            qqRedEnvelope.setType("口令红包");
+        else
+            qqRedEnvelope.setType("普通红包");
+
+        list=nodeInfo.findAccessibilityNodeInfosByText("查看领取详情");
+        child=list.get(0).getParent().getParent().getChild(2);
+        String whoSend=child.getText().toString();
+        whoSend=whoSend.substring(0,whoSend.length()-3);
+        LogUtil.d("发送红包的人："+whoSend+"-resource:"+child.toString());
+        qqRedEnvelope.setWho_send(whoSend);
+
+        String getCount="";
+        list=nodeInfo.findAccessibilityNodeInfosByText("已存入余额");
+        for (AccessibilityNodeInfo accessibilityNodeInfo : list) {
+            if (accessibilityNodeInfo.getClassName().equals("android.widget.TextView")){
+                child=accessibilityNodeInfo.getParent().getChild(1);
+                getCount=child.getText().toString();
+                LogUtil.d("红包金额为："+child.getText()+"-resource:"+child.toString());
+                qqRedEnvelope.setCount(child.getText().toString());
             }
-
-            list=nodeInfo.findAccessibilityNodeInfosByText("元");
-            for (AccessibilityNodeInfo accessibilityNodeInfo : list) {
-                ToastUtil.showToast(context,"元");
-                LogUtil.i("元");
-            }
-
-//            QQ_Hongbao qq_hongbao=new QQ_Hongbao();
-//            SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
-//            Date date=new Date(System.currentTimeMillis());
-//            String time=dateFormat.format(date);
-//            qq_hongbao.setTime(time);
-//
-//            list=nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mobileqq:id/sender_info");//谁发送的红包
-//            String send_info=list.get(0).getText().toString();
-//            qq_hongbao.setSend_info(send_info);
-//
-//            list=nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mobileqq:id/wish_word");//红包种类
-//            String wish_word=list.get(0).getText().toString();
-//            qq_hongbao.setWish_word(wish_word);
-//
-//            list=nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mobileqq:id/hb_count_tv");//红包金额
-//            String hb_count_tv=list.get(0).getText().toString();
-//            qq_hongbao.setHb_count_tv(hb_count_tv);
-//
-//
-//            float count= PreferencesUtils.getQQHongbaoRecordCount();
-//            if(count==0){
-//                PreferencesUtils.setQQHongbaoRecordTime(time);//清空过数据，重新设置开始时间
-//            }
-//            count+= Float.valueOf(hb_count_tv);
-//            PreferencesUtils.setQQHongbaoRecordCount(count);
-//
-//            DatabaseHelper databaseHelper=new DatabaseHelper(context);
-//            databaseHelper.insert(qq_hongbao);
-
         }
+        QQRedEnvelopeDb.insertData(qqRedEnvelope);
 
+        float count= PreferencesUtils.getQQHongbaoRecordCount();
+        if(count==0){
+            PreferencesUtils.setQQHongbaoRecordTime(time);//清空过数据，重新设置开始时间
+        }
+        count+= Float.valueOf(getCount);
+        LogUtil.d("总红包数额为："+getCount);
+        PreferencesUtils.setQQHongbaoRecordCount(count);
+
+        EventBus.getDefault().post(new MessageEvent(RedEventConstant.GET_QQ_DATA));
     }
 }

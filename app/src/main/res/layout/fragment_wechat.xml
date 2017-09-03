@@ -16,15 +16,6 @@
             android:layout_marginTop="20dp"
             >
 
-            <TextView
-                android:id="@+id/tv_count"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:text="已为您抢到0元，点击查看详情。"
-                android:textSize="@dimen/text_size_medium"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -34,15 +25,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_size_small"
-                    android:text="QQ红包监控开关："
+                    android:text="微信红包监控开关："
                     android:layout_centerHorizontal="true"/>
+
                 <CheckBox
-                    android:id="@+id/cb_qq_control"
+                    android:id="@+id/cb_wechat_control"
                     android:layout_width="60dp"
-                    android:gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:checked="true"
+                    android:gravity="center"
                     />
             </LinearLayout>
 

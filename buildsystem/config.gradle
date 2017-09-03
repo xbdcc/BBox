@@ -26,12 +26,15 @@ ext {
             rxjava       : "2.1.0",
             rxandroid    : "2.0.1",
 
+            //database
+            greendao     : "3.2.2",
+
             //other
             fragmentation: "1.0.7",
             leakcanary   : "1.5.1",
             bugly        : "2.6.5", //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
             bugtags      : "2.3.1",//latest.integration 最新版
-            eventbus     :"3.0.0"
+            eventbus     : "3.0.0"
 //            fragmentation: "latest.release"
     ]
 
@@ -61,6 +64,9 @@ ext {
             //rx
             rxjava                  : "io.reactivex.rxjava2:rxjava:${dependVersion.rxjava}",
             rxandroid               : "io.reactivex.rxjava2:rxandroid:${dependVersion.rxandroid}",
+
+            //database
+            greendao                : "org.greenrobot:greendao:${dependVersion.greendao}",
 
             //other
             fragmentation           : "me.yokeyword:fragmentation:${dependVersion.fragmentation}",

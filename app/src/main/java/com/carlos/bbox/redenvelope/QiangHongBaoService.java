@@ -86,6 +86,7 @@ public class QiangHongBaoService extends AccessibilityService {
             return;
         }
 
+
 //        printEventLog(event);
 
         String packageName=event.getPackageName().toString();
@@ -95,6 +96,19 @@ public class QiangHongBaoService extends AccessibilityService {
         if (packageName.equals(PACKAGE_WECHAT)){
             new WechatHongbaoService(this,event,nodeRoot);
         }
+
+//        try {
+//            String packageName=event.getPackageName().toString();
+//            if (packageName.equals(PACKAGE_QQ)&& PreferencesUtils.getQQUseStatus()){
+//                new QQHongBaoService(this,event,nodeRoot);
+//            }
+//            if (packageName.equals(PACKAGE_WECHAT)){
+//                new WechatHongbaoService(this,event,nodeRoot);
+//            }
+//        }catch (Exception e){
+//            LogUtil.e("error:",e);
+//            onServiceConnected();
+//        }
 
     }
 
